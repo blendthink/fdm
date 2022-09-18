@@ -3,6 +3,7 @@ use reqwest::{blocking, Error};
 use serde::Deserialize;
 use std::fmt;
 
+#[derive(Eq, Ord, PartialEq, PartialOrd)]
 pub struct Version {
     pub channel: Channel,
     pub major: i32,
@@ -40,7 +41,7 @@ impl fmt::Display for Version {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Channel {
     Dev,
     Beta,
@@ -75,7 +76,7 @@ pub fn list(channel: Channel) -> Result<Vec<Version>, Error> {
 
     let iter = response.prefixes.iter();
 
-    let versions: Vec<Version> = iter
+    let mut versions: Vec<Version> = iter
         .filter_map(|prefix| {
             let caps = reg.captures(prefix)?;
             let major = caps.name("major").to_int();
@@ -93,6 +94,8 @@ pub fn list(channel: Channel) -> Result<Vec<Version>, Error> {
             })
         })
         .collect();
+
+    versions.sort();
 
     Ok(versions)
 }
