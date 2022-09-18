@@ -11,7 +11,7 @@ impl FdmCommand for Releases {
         match list(Channel::Stable) {
             Ok(versions) => {
                 for version in versions {
-                    println!("{}", version.to_string());
+                    println!("{}", version);
                 }
                 ExitCode::SUCCESS
             }

@@ -1,6 +1,7 @@
 use regex::{Match, Regex};
 use reqwest::{blocking, Error};
 use serde::Deserialize;
+use std::fmt;
 
 pub struct Version {
     pub channel: Channel,
@@ -11,8 +12,8 @@ pub struct Version {
     pub pre_patch: Option<i32>,
 }
 
-impl ToString for Version {
-    fn to_string(&self) -> String {
+impl fmt::Display for Version {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let version = format!(
             "{major}.{minor}.{patch}",
             major = self.major,
@@ -21,14 +22,15 @@ impl ToString for Version {
         );
 
         if let Channel::Stable = self.channel {
-            return version;
+            return write!(f, "{}", version);
         }
 
         if self.pre_minor.is_none() || self.pre_patch.is_none() {
-            return version;
+            return write!(f, "{}", version);
         }
 
-        format!(
+        write!(
+            f,
             "{version}-{minor}.{patch}.{channel}",
             version = version,
             minor = self.pre_minor.unwrap(),
