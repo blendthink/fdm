@@ -1,4 +1,4 @@
-#[derive(Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(clap::ValueEnum, Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Channel {
     Dev,
     Beta,
