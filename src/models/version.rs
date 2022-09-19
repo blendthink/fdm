@@ -1,5 +1,5 @@
 use crate::models::channel::Channel;
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
 
 #[derive(Eq, Ord, PartialEq, PartialOrd)]
 pub struct Version {
@@ -11,8 +11,8 @@ pub struct Version {
     pub pre_patch: Option<i32>,
 }
 
-impl fmt::Display for Version {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Display for Version {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         let version = format!(
             "{major}.{minor}.{patch}",
             major = self.major,
