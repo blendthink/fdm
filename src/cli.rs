@@ -1,4 +1,4 @@
-use crate::commands::{FdmCommand, ReleasesCommand};
+use crate::commands::{FdmCommand, InstallCommand, ReleasesCommand};
 use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
@@ -14,6 +14,9 @@ struct Args {
 enum Action {
     /// View all Dart SDK releases available for install.
     Releases(ReleasesCommand),
+
+    /// Installs Dart SDK Version.
+    Install(InstallCommand),
 }
 
 pub fn run() -> ExitCode {
@@ -22,5 +25,6 @@ pub fn run() -> ExitCode {
     use Action::*;
     match args.action {
         Releases(cmd) => cmd.run(),
+        Install(cmd) => cmd.run(),
     }
 }
