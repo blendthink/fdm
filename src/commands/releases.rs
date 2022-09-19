@@ -1,5 +1,6 @@
 use super::command::FdmCommand;
-use crate::services::{list, Channel};
+use crate::models::Channel;
+use crate::services;
 use clap::Parser;
 use std::process::ExitCode;
 
@@ -8,7 +9,7 @@ pub struct Releases {}
 
 impl FdmCommand for Releases {
     fn run(self) -> ExitCode {
-        match list(Channel::Stable) {
+        match services::list(Channel::Stable) {
             Ok(versions) => {
                 for version in versions {
                     println!("{}", version);
