@@ -5,12 +5,12 @@ use clap::Parser;
 use std::process::ExitCode;
 
 #[derive(Parser)]
-pub struct Releases {
+pub struct ReleasesCommand {
     #[clap(value_enum, default_value_t = Channel::Stable)]
     channel: Channel,
 }
 
-impl FdmCommand for Releases {
+impl FdmCommand for ReleasesCommand {
     fn run(self) -> ExitCode {
         match services::list(self.channel) {
             Ok(versions) => {

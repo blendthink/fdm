@@ -2,4 +2,4 @@ mod command;
 mod releases;
 
 pub use command::FdmCommand;
-pub use releases::Releases;
+pub use releases::ReleasesCommand;

@@ -1,5 +1,4 @@
-use crate::commands;
-use crate::commands::FdmCommand;
+use crate::commands::{FdmCommand, ReleasesCommand};
 use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
@@ -14,7 +13,7 @@ struct Args {
 #[derive(Subcommand)]
 enum Action {
     /// View all Dart SDK releases available for install.
-    Releases(commands::Releases),
+    Releases(ReleasesCommand),
 }
 
 pub fn run() -> ExitCode {
