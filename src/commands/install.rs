@@ -1,5 +1,5 @@
 use super::command::FdmCommand;
-use crate::models::{Channel, SupportedArch, SupportedOs, Version};
+use crate::models::{SupportedArch, SupportedOs, Version};
 use clap::Parser;
 use std::env;
 use std::process::ExitCode;
