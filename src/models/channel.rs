@@ -1,7 +1,6 @@
-use clap::ValueEnum;
 use std::fmt::{Display, Formatter};
 
-#[derive(ValueEnum, Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Channel {
     Dev,
     Beta,
@@ -13,7 +12,7 @@ const CHANNEL_NAME_BETA: &str = "beta";
 const CHANNEL_NAME_STABLE: &str = "stable";
 
 impl TryFrom<&str> for Channel {
-    type Error = String;
+    type Error = &'static str;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         use Channel::*;
@@ -21,10 +20,7 @@ impl TryFrom<&str> for Channel {
             CHANNEL_NAME_DEV => Dev,
             CHANNEL_NAME_BETA => Beta,
             CHANNEL_NAME_STABLE => Stable,
-            &_ => {
-                let message = format!("{} is not supported.", value);
-                return Err(message);
-            }
+            &_ => return Err(r"[ ^(dev|beta|stable)$ ]"),
         };
         Ok(channel)
     }

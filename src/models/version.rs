@@ -23,7 +23,7 @@ impl TryFrom<&str> for Version {
 
         let caps = match reg.captures(value) {
             Some(caps) => caps,
-            None => return Err(r"Regex[ ^\d+\.\d+\.\d+(-\d+\.\d+\.(beta|dev))?$ ]"),
+            None => return Err(r"[ ^\d+\.\d+\.\d+(-\d+\.\d+\.(dev|beta))?$ ]"),
         };
 
         let major = caps.name("major").to_int();

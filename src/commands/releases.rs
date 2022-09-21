@@ -6,7 +6,7 @@ use std::process::ExitCode;
 
 #[derive(Parser)]
 pub struct ReleasesCommand {
-    #[clap(value_enum, default_value_t = Channel::Stable)]
+    #[clap(parse(try_from_str = Channel::try_from), default_value_t = Channel::Stable)]
     channel: Channel,
 }
 
