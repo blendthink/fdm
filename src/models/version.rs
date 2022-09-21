@@ -1,5 +1,6 @@
 use crate::models::channel::Channel;
-use std::fmt::{Display, Formatter, Result};
+use regex::{Captures, Match, Regex};
+use std::fmt::{Display, Formatter, Result as DisplayResult};
 
 #[derive(Eq, Ord, PartialEq, PartialOrd)]
 pub struct Version {
@@ -11,8 +12,56 @@ pub struct Version {
     pub pre_patch: Option<i32>,
 }
 
+impl TryFrom<&str> for Version {
+    type Error = &'static str;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let reg = Regex::new(
+            r"^(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(-(?P<pre_minor>\d+)\.(?P<pre_patch>\d+)\.(?P<channel>beta|dev))?$",
+        ).unwrap();
+
+        let caps = match reg.captures(value) {
+            Some(caps) => caps,
+            None => return Err(r"Regex[ ^\d+\.\d+\.\d+(-\d+\.\d+\.(beta|dev))?$ ]"),
+        };
+
+        let major = caps.name("major").to_int();
+        let minor = caps.name("minor").to_int();
+        let patch = caps.name("patch").to_int();
+        let pre_minor = caps.name("pre_minor").to_int_or_null();
+        let pre_patch = caps.name("pre_patch").to_int_or_null();
+        let channel = caps
+            .name("channel")
+            .map_or(Channel::Stable, |m| Channel::try_from(m.as_str()).unwrap());
+
+        Ok(Version {
+            channel,
+            major,
+            minor,
+            patch,
+            pre_minor,
+            pre_patch,
+        })
+    }
+}
+
+trait ToInt {
+    fn to_int(self) -> i32;
+    fn to_int_or_null(self) -> Option<i32>;
+}
+
+impl<'t> ToInt for Option<Match<'t>> {
+    fn to_int(self) -> i32 {
+        self.unwrap().as_str().parse::<i32>().unwrap()
+    }
+
+    fn to_int_or_null(self) -> Option<i32> {
+        self.and_then(|m| m.as_str().parse::<i32>().ok())
+    }
+}
+
 impl Display for Version {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> DisplayResult {
         let version = format!(
             "{major}.{minor}.{patch}",
             major = self.major,
@@ -34,7 +83,7 @@ impl Display for Version {
             version = version,
             minor = self.pre_minor.unwrap(),
             patch = self.pre_patch.unwrap(),
-            channel = self.channel.name(),
+            channel = self.channel,
         )
     }
 }

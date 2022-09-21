@@ -1,5 +1,5 @@
 use crate::models::{Channel, Version};
-use regex::{Match, Regex};
+use regex::Match;
 use reqwest::{blocking, Error};
 use serde::Deserialize;
 
@@ -11,32 +11,26 @@ struct Response {
 pub fn list(channel: Channel) -> Result<Vec<Version>, Error> {
     let request_url = format!(
         "https://storage.googleapis.com/storage/v1/b/dart-archive/o?delimiter=/&prefix=channels/{channel}/release/",
-        channel = channel.name(),
+        channel = channel,
     );
     let response: Response = blocking::get(request_url)?.json()?;
-    let reg = Regex::new(
-        r"^channels/(stable|beta|dev)/release/(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(-(?P<pre_minor>\d+)\.(?P<pre_patch>\d+)\.(beta|dev))?/$",
-    )
-    .unwrap();
-
-    let iter = response.prefixes.iter();
-
-    let mut versions: Vec<Version> = iter
+    let mut versions: Vec<Version> = response
+        .prefixes
+        .iter()
         .filter_map(|prefix| {
-            let caps = reg.captures(prefix)?;
-            let major = caps.name("major").to_int();
-            let minor = caps.name("minor").to_int();
-            let patch = caps.name("patch").to_int();
-            let pre_minor = caps.name("pre_minor").to_int_or_null();
-            let pre_patch = caps.name("pre_patch").to_int_or_null();
-            Some(Version {
-                channel,
-                major,
-                minor,
-                patch,
-                pre_minor,
-                pre_patch,
-            })
+            let tmp = prefix
+                .strip_prefix(format!("channels/{}/release/", channel).as_str())?
+                .strip_suffix('/')?;
+            match Version::try_from(tmp) {
+                Ok(version) => {
+                    if channel == version.channel {
+                        Some(version)
+                    } else {
+                        None
+                    }
+                }
+                Err(_) => None,
+            }
         })
         .collect();
 
