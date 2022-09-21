@@ -1,5 +1,5 @@
 use super::command::FdmCommand;
-use crate::models::{SupportedArch, SupportedOs, Version};
+use crate::models::{Platform, SupportedArch, Version};
 use clap::Parser;
 use std::env;
 use std::process::ExitCode;
@@ -14,7 +14,7 @@ impl FdmCommand for InstallCommand {
     fn run(self) -> ExitCode {
         let version = self.version;
 
-        let current_os = match SupportedOs::try_from(env::consts::OS) {
+        let platform = match Platform::try_from(env::consts::OS) {
             Ok(supported) => supported,
             Err(message) => {
                 println!("{}", message);
