@@ -1,5 +1,5 @@
 use super::command::FdmCommand;
-use crate::models::{Platform, SupportedArch, Version};
+use crate::models::{Architecture, Platform, Version};
 use clap::Parser;
 use std::env;
 use std::process::ExitCode;
@@ -22,7 +22,7 @@ impl FdmCommand for InstallCommand {
             }
         };
 
-        let current_arch = match SupportedArch::try_from(env::consts::ARCH) {
+        let current_arch = match Architecture::try_from(env::consts::ARCH) {
             Ok(supported) => supported,
             Err(message) => {
                 println!("{}", message);

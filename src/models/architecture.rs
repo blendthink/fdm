@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 
-pub enum SupportedArch {
+pub enum Architecture {
     Ia32,
     X64,
     Arm,
@@ -12,11 +12,11 @@ const TRY_FROM_NAME_X64: &str = "x86_64";
 const TRY_FROM_NAME_ARM: &str = "arm";
 const TRY_FROM_NAME_ARM64: &str = "aarch64";
 
-impl TryFrom<&str> for SupportedArch {
+impl TryFrom<&str> for Architecture {
     type Error = String;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        use SupportedArch::*;
+        use Architecture::*;
         let arch = match value {
             TRY_FROM_NAME_IA32 => Ia32,
             TRY_FROM_NAME_X64 => X64,
@@ -36,9 +36,9 @@ const DISPLAY_NAME_X64: &str = "x64";
 const DISPLAY_NAME_ARM: &str = "arm";
 const DISPLAY_NAME_ARM64: &str = "arm64";
 
-impl Display for SupportedArch {
+impl Display for Architecture {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        use SupportedArch::*;
+        use Architecture::*;
         let arch_name = match self {
             Ia32 => DISPLAY_NAME_IA32,
             X64 => DISPLAY_NAME_X64,
