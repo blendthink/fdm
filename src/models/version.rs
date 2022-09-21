@@ -1,5 +1,6 @@
+use crate::extensions::ToInt;
 use crate::models::channel::Channel;
-use regex::{Captures, Match, Regex};
+use regex::Regex;
 use std::fmt::{Display, Formatter, Result as DisplayResult};
 
 #[derive(Eq, Ord, PartialEq, PartialOrd)]
@@ -42,21 +43,6 @@ impl TryFrom<&str> for Version {
             pre_minor,
             pre_patch,
         })
-    }
-}
-
-trait ToInt {
-    fn to_int(self) -> i32;
-    fn to_int_or_null(self) -> Option<i32>;
-}
-
-impl<'t> ToInt for Option<Match<'t>> {
-    fn to_int(self) -> i32 {
-        self.unwrap().as_str().parse::<i32>().unwrap()
-    }
-
-    fn to_int_or_null(self) -> Option<i32> {
-        self.and_then(|m| m.as_str().parse::<i32>().ok())
     }
 }
 
