@@ -1,5 +1,6 @@
 use super::command::FdmCommand;
 use crate::models::{Architecture, Platform, Version};
+use crate::services::install;
 use clap::Parser;
 use std::env;
 use std::process::ExitCode;
@@ -22,7 +23,7 @@ impl FdmCommand for InstallCommand {
             }
         };
 
-        let current_arch = match Architecture::try_from(env::consts::ARCH) {
+        let architecture = match Architecture::try_from(env::consts::ARCH) {
             Ok(supported) => supported,
             Err(message) => {
                 println!("{}", message);
@@ -30,6 +31,12 @@ impl FdmCommand for InstallCommand {
             }
         };
 
-        todo!()
+        match install(platform, architecture, version) {
+            Ok(_) => ExitCode::SUCCESS,
+            Err(e) => {
+                println!("{}", e);
+                ExitCode::FAILURE
+            }
+        }
     }
 }
