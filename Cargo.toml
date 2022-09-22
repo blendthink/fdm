@@ -16,6 +16,7 @@ categories = ["command-line-interface", "development-tools"]
 
 [dependencies]
 clap = { version = "3.2.21", features = ["derive"] }
+console = "0.15.1"
 regex = "1.6.0"
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 serde = { version = "1.0.123", features = ["derive"] }
