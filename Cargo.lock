@@ -303,6 +303,7 @@ dependencies = [
  "regex",
  "reqwest",
  "serde",
+ "tempfile",
  "tokio",
  "zip",
 ]
