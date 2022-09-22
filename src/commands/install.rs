@@ -13,8 +13,6 @@ pub struct InstallCommand {
 
 impl FdmCommand for InstallCommand {
     fn run(self) -> ExitCode {
-        let version = self.version;
-
         let platform = match Platform::try_from(env::consts::OS) {
             Ok(supported) => supported,
             Err(message) => {
@@ -31,7 +29,7 @@ impl FdmCommand for InstallCommand {
             }
         };
 
-        match install(platform, architecture, version) {
+        match install(platform, architecture, self.version) {
             Ok(_) => ExitCode::SUCCESS,
             Err(e) => {
                 println!("{}", e);
