@@ -1,5 +1,5 @@
-use crate::console;
 use crate::models::{Architecture, Platform, Version};
+use crate::utils::console;
 use futures_util::StreamExt;
 use indicatif::{ProgressFinish, ProgressIterator};
 use reqwest::StatusCode;
